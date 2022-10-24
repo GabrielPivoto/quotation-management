@@ -6,6 +6,8 @@
 
 ### First IDP project
 
+REST application whose purpose is to store quotes from stock market.
+
 <h4 align="center"> 
 	Author :pencil2:
 </h4>
@@ -13,3 +15,7 @@
 <p align="center">
  <a href="https://github.com/GabrielPivoto">Gabriel Pivoto</a> 
 </p>
+
+### What is needed:
+- [x] JDK
+- [x] Maven
