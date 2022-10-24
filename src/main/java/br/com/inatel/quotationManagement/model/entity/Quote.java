@@ -40,4 +40,10 @@ public class Quote {
         this.date = date;
     }
 
+    public Quote(Double cost, LocalDate date, Stock stock){
+        this.cost = cost;
+        this.date = date;
+        this.stock = stock;
+    }
+
 }

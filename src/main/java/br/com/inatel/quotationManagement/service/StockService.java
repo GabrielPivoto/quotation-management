@@ -9,6 +9,9 @@ import br.com.inatel.quotationManagement.model.form.QuoteForm;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,27 +29,30 @@ public class StockService {
     @Autowired
     private QuoteRepository quoteRepository;
 
+    @Cacheable(value = "stockList")
     public List<StockDto> findAll(){
         List<Stock> stocks = stockRepository.findAll();
         stocks.forEach(s -> s.getQuotes().size());
         return StockMapper.convertToDto(stocks);
     }
 
-    public ResponseEntity<StockDto> getStockByStockId(String id){
+    public ResponseEntity<?> getStockByStockId(String id){
         Optional<Stock> dto = stockRepository.findByStockId(id);
-        return dto.map(value -> ResponseEntity.ok(new StockDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return (dto.isPresent())?new ResponseEntity<>(new StockDto(dto.get()),HttpStatus.OK):
+                new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
     }
 
-    public void postQuotes(QuoteForm quoteForm){
+    @CacheEvict(value = "stockList", allEntries = true)
+    public ResponseEntity<?> postQuotes(QuoteForm quoteForm){
         Optional<Stock> optionalStock = stockRepository.findByStockId(quoteForm.getStockId());
         if(optionalStock.isPresent()){
             Stock stock = optionalStock.get();
-            List<Quote> quotes = QuoteMapper.convertMapToList(quoteForm);
-            quotes.forEach(q -> {
-                q.setStock(stock);
-                quoteRepository.save(q);
-            });
+            List<Quote> quotes = QuoteMapper.convertMapToList(quoteForm, stock);
+            quoteRepository.saveAll(quotes);
+            stock.setQuotes(quotes);
+            return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
         }
+        return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
     }
 
 }
