@@ -35,10 +35,9 @@ public class Quote {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Quote(Double cost, LocalDate date, Stock stock){
+    public Quote(Double cost, LocalDate date){
         this.cost = cost;
         this.date = date;
-        this.stock = stock;
     }
 
 }

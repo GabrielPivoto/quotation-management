@@ -30,10 +30,9 @@ public class StockController {
         return stockService.getStockByStockId(id);
     }
 
-    @PostMapping("/addQuote")
-    @Transactional
-    public ResponseEntity<?> addQuoteToStock(@RequestBody QuoteForm form){
-        return stockService.addQuoteToStock(form);
+    @PostMapping("/postQuotes")
+    public void postQuotes(@RequestBody QuoteForm quoteForm){
+        stockService.postQuotes(quoteForm);
     }
 
 }

@@ -1,7 +1,9 @@
 package br.com.inatel.quotationManagement.service;
 
+import br.com.inatel.quotationManagement.mapper.QuoteMapper;
 import br.com.inatel.quotationManagement.mapper.StockMapper;
 import br.com.inatel.quotationManagement.model.dto.StockDto;
+import br.com.inatel.quotationManagement.model.entity.Quote;
 import br.com.inatel.quotationManagement.model.entity.Stock;
 import br.com.inatel.quotationManagement.model.form.QuoteForm;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
@@ -35,10 +37,16 @@ public class StockService {
         return dto.map(value -> ResponseEntity.ok(new StockDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<?> addQuoteToStock(QuoteForm form){
-        quoteRepository.save(form.convert(stockRepository));
-        return null;
+    public void postQuotes(QuoteForm quoteForm){
+        Optional<Stock> optionalStock = stockRepository.findByStockId(quoteForm.getStockId());
+        if(optionalStock.isPresent()){
+            Stock stock = optionalStock.get();
+            List<Quote> quotes = QuoteMapper.convertMapToList(quoteForm);
+            quotes.forEach(q -> {
+                q.setStock(stock);
+                quoteRepository.save(q);
+            });
+        }
     }
-
 
 }
