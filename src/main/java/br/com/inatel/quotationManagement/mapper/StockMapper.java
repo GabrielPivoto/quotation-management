@@ -7,6 +7,11 @@ import br.com.inatel.quotationManagement.model.form.Form;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper class. Responsible for conversions concerning stocks.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 public class StockMapper {
 
     public static List<StockDto> convertToDto(List<Stock> stocks){

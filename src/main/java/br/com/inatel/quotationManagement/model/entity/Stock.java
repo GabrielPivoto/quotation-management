@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Class model of Stock
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 @Entity
 @Data
 @NoArgsConstructor

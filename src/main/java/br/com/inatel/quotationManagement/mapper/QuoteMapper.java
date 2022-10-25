@@ -8,6 +8,11 @@ import br.com.inatel.quotationManagement.model.form.Form;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mapper class. Responsible for conversions concerning quotes.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 public class QuoteMapper {
 
     public static List<Quote> convertMapToList(Form form, Stock stock){

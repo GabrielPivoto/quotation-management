@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * Controller class. All endpoints are built here.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 @RestController
 @RequestMapping("/stocks")
 public class StockController {

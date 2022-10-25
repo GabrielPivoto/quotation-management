@@ -12,6 +12,11 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Class model of Quote.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

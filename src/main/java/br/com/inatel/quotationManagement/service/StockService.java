@@ -20,6 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class. Business logic implemented here.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 @Service
 @Transactional
 public class StockService {

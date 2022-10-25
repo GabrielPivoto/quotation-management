@@ -8,6 +8,11 @@ import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * WebClient responsible for consuming external API.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 @Service
 public class WebClientGetStocks {
 

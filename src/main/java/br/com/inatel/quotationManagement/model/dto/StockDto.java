@@ -7,6 +7,11 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class representing the Data Transfer Object of a Stock.
+ * @author Gabriel Pivoto
+ * @since Oct. 2022
+ */
 @Data
 public class StockDto {
 
