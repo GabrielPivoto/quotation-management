@@ -19,3 +19,4 @@ REST application whose purpose is to store quotes from stock market.
 ### What is needed:
 - [x] [JDK](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html)
 - [x] [Maven](https://maven.apache.org/download.cgi)
+- [x] [Docker](https://www.docker.com/)
