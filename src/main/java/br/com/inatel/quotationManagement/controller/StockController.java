@@ -26,12 +26,7 @@ public class StockController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getStockByStockId(@PathVariable String id){
-        return stockService.getStockByStockId(id);
-    }
-
-    @GetMapping("/stock")
-    public List<StockDto> listStocksFromDocker(){
-        return StockMapper.convertToDto(stockService.listStocksFromDocker());
+        return stockService.findStockByStockId(id);
     }
 
     @PostMapping("/postQuotes")

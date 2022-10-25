@@ -40,7 +40,7 @@ public class StockService {
         return StockMapper.convertToDto(stocks);
     }
 
-    public ResponseEntity<?> getStockByStockId(String id){
+    public ResponseEntity<?> findStockByStockId(String id){
         Optional<Stock> dto = stockRepository.findByStockId(id);
         return (dto.isPresent())?new ResponseEntity<>(new StockDto(dto.get()),HttpStatus.OK):
                 new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
@@ -50,10 +50,8 @@ public class StockService {
     public ResponseEntity<?> postStockQuotes(Form form){
         Optional<Stock> optionalStock = stockRepository.findByStockId(form.getStockId());
         if(optionalStock.isPresent()){
-            Stock stock = optionalStock.get();
-            List<Quote> quotes = QuoteMapper.convertMapToList(form, stock);
+            List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
             quoteRepository.saveAll(quotes);
-            stock.setQuotes(quotes);
             return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
         }
         return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
@@ -63,14 +61,13 @@ public class StockService {
         if(isAtStockManager(form.getStockId())){
             Stock stock = StockMapper.convertToEntity(form);
             stockRepository.save(stock);
-            stock.setQuotes(QuoteMapper.convertMapToList(form,stock));
-            quoteRepository.saveAll(stock.getQuotes());
+            quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
             return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("StockId Not In Stock-Manager", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("StockId Must First Be In Stock Manager", HttpStatus.BAD_REQUEST);
     }
 
-    public List<Stock> listStocksFromDocker(){
+    private List<Stock> listStocksFromDocker(){
         return webClientGetStocks.listAllStocks();
     }
 
