@@ -26,19 +26,4 @@ public class WebClientGetStocks {
         return stocks;
     }
 
-    public static void main(String[] args) {
-        List<Stock> stocks = new ArrayList<>();
-
-        Flux<Stock> fluxStock = WebClient.create("http://localhost:8080")
-                .get()
-                .uri("/stock")
-                .retrieve()
-                .bodyToFlux(Stock.class);
-
-        fluxStock.subscribe(stocks::add);
-        fluxStock.blockLast();
-        System.out.println(stocks);
-    }
-
-
 }

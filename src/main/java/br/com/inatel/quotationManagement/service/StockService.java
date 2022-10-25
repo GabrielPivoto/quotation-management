@@ -52,7 +52,7 @@ public class StockService {
         if(optionalStock.isPresent()){
             List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
             quoteRepository.saveAll(quotes);
-            return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
+            return new ResponseEntity<>(findStockByStockId(form.getStockId()), HttpStatus.CREATED);
         }
         return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
     }
@@ -62,7 +62,7 @@ public class StockService {
             Stock stock = StockMapper.convertToEntity(form);
             stockRepository.save(stock);
             quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
-            return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
+            return new ResponseEntity<>(findStockByStockId(form.getStockId()), HttpStatus.CREATED);
         }
         return new ResponseEntity<>("StockId Must First Be In Stock Manager", HttpStatus.BAD_REQUEST);
     }
