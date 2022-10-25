@@ -1,5 +1,6 @@
 package br.com.inatel.quotationManagement.controller;
 
+import br.com.inatel.quotationManagement.mapper.StockMapper;
 import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.form.QuoteForm;
 import br.com.inatel.quotationManagement.service.StockService;
@@ -29,6 +30,11 @@ public class StockController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getStockByStockId(@PathVariable String id){
         return stockService.getStockByStockId(id);
+    }
+
+    @GetMapping("/stock")
+    public List<StockDto> listStocksFromDocker(){
+        return StockMapper.convertToDto(stockService.listStocksFromDocker());
     }
 
     @PostMapping("/postQuotes")

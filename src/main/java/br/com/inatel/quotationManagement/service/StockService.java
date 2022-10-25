@@ -8,6 +8,7 @@ import br.com.inatel.quotationManagement.model.entity.Stock;
 import br.com.inatel.quotationManagement.model.form.QuoteForm;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
+import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,6 +29,9 @@ public class StockService {
 
     @Autowired
     private QuoteRepository quoteRepository;
+
+    @Autowired
+    private WebClientGetStocks webClientGetStocks;
 
     @Cacheable(value = "stockList")
     public List<StockDto> findAll(){
@@ -51,8 +55,13 @@ public class StockService {
             quoteRepository.saveAll(quotes);
             stock.setQuotes(quotes);
             return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
+        }else
+            return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
+        
+    }
+
+    public List<Stock> listStocksFromDocker(){
+        return webClientGetStocks.listAllStocks();
     }
 
 }
