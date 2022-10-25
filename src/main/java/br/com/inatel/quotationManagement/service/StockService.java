@@ -5,7 +5,7 @@ import br.com.inatel.quotationManagement.mapper.StockMapper;
 import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.entity.Quote;
 import br.com.inatel.quotationManagement.model.entity.Stock;
-import br.com.inatel.quotationManagement.model.form.QuoteForm;
+import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
 import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
@@ -47,21 +47,36 @@ public class StockService {
     }
 
     @CacheEvict(value = "stockList", allEntries = true)
-    public ResponseEntity<?> postQuotes(QuoteForm quoteForm){
-        Optional<Stock> optionalStock = stockRepository.findByStockId(quoteForm.getStockId());
+    public ResponseEntity<?> postStockQuotes(Form form){
+        Optional<Stock> optionalStock = stockRepository.findByStockId(form.getStockId());
         if(optionalStock.isPresent()){
             Stock stock = optionalStock.get();
-            List<Quote> quotes = QuoteMapper.convertMapToList(quoteForm, stock);
+            List<Quote> quotes = QuoteMapper.convertMapToList(form, stock);
             quoteRepository.saveAll(quotes);
             stock.setQuotes(quotes);
             return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
-        }else
-            return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
-        
+        }
+        return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<?> postStocks(Form form){
+        if(isAtStockManager(form.getStockId())){
+            Stock stock = StockMapper.convertToEntity(form);
+            stockRepository.save(stock);
+            stock.setQuotes(QuoteMapper.convertMapToList(form,stock));
+            quoteRepository.saveAll(stock.getQuotes());
+            return new ResponseEntity<>(findAll(), HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("StockId Not In Stock-Manager", HttpStatus.BAD_REQUEST);
     }
 
     public List<Stock> listStocksFromDocker(){
         return webClientGetStocks.listAllStocks();
+    }
+
+    private boolean isAtStockManager(String stockId){
+        List<Stock> stocks = listStocksFromDocker();
+        return stocks.stream().anyMatch(s -> s.getId().equals(stockId));
     }
 
 }

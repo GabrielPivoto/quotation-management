@@ -2,17 +2,14 @@ package br.com.inatel.quotationManagement.controller;
 
 import br.com.inatel.quotationManagement.mapper.StockMapper;
 import br.com.inatel.quotationManagement.model.dto.StockDto;
-import br.com.inatel.quotationManagement.model.form.QuoteForm;
+import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.service.StockService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -39,8 +36,14 @@ public class StockController {
 
     @PostMapping("/postQuotes")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<?> postQuotes(@RequestBody QuoteForm quoteForm){
-        return stockService.postQuotes(quoteForm);
+    public ResponseEntity<?> postQuotes(@RequestBody Form form){
+        return stockService.postStockQuotes(form);
+    }
+
+    @PostMapping("/postStocks")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseEntity<?> postStocks(@RequestBody Form form){
+        return stockService.postStocks(form);
     }
 
 }

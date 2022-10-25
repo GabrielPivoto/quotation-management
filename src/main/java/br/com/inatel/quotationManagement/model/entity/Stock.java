@@ -26,6 +26,11 @@ public class Stock {
     @OneToMany(mappedBy = "stock")
     private List<Quote> quotes = new ArrayList<>();
 
+    public Stock(String stockId, List<Quote> quotes){
+        this.stockId = stockId;
+        this.quotes = quotes;
+    }
+
     @PrePersist
     private void onPersist() {
         this.id = UUID.randomUUID().toString();

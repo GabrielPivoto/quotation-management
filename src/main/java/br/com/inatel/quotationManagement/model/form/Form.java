@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class QuoteForm {
+public class Form {
 
     private String stockId;
     private Map<LocalDate, Double> quotesMap = new HashMap<>();
