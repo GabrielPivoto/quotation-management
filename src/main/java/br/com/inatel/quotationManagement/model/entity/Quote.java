@@ -33,7 +33,7 @@ public class Quote {
     private double cost;
 
     @ManyToOne
-    private Stock stock;
+    private StockAux stock;
 
     @PrePersist
     private void onPersist() {
@@ -45,7 +45,7 @@ public class Quote {
         this.date = date;
     }
 
-    public Quote(Double cost, LocalDate date, Stock stock){
+    public Quote(Double cost, LocalDate date, StockAux stock){
         this.cost = cost;
         this.date = date;
         this.stock = stock;

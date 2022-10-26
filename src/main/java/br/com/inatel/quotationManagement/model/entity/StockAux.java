@@ -21,7 +21,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Stock {
+public class StockAux {
 
     @Id
     private String id;
@@ -31,7 +31,7 @@ public class Stock {
     @OneToMany(mappedBy = "stock")
     private List<Quote> quotes = new ArrayList<>();
 
-    public Stock(String stockId, List<Quote> quotes){
+    public StockAux(String stockId, List<Quote> quotes){
         this.stockId = stockId;
         this.quotes = quotes;
     }
