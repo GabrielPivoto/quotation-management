@@ -10,7 +10,6 @@ import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
 import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +66,17 @@ public class StockService {
             return new ResponseEntity<>(new StockDto(stock), HttpStatus.CREATED);
         }
         return new ResponseEntity<>("StockId Not Found", HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<?> deleteStock(String stockId){
+        Optional<StockAux> opStock = stockRepository.findByStockId(stockId);
+        if(opStock.isPresent()){
+            List<Quote> quotes = opStock.get().getQuotes();
+            stockRepository.delete(opStock.get());
+            quoteRepository.deleteAll(quotes);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>("StockId Not Found",HttpStatus.NOT_FOUND);
     }
 
 
