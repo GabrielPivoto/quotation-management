@@ -52,13 +52,15 @@ public class StockService {
     }
 
     public ResponseEntity<?> postStockAndQuotes(Form form){
-        StockAux stock = StockMapper.convertToEntity(form);
+        StockAux stock;
         if(isAtStockManager(form.getStockId())){
             Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
             if(optionalStock.isPresent()){
+                stock = optionalStock.get();
                 List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
                 quoteRepository.saveAll(quotes);
             }else{
+                stock = StockMapper.convertToEntity(form);
                 stockRepository.save(stock);
                 quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
             }
