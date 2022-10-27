@@ -51,28 +51,7 @@ public class StockService {
                 new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
     }
 
-    @CacheEvict(value = "stockList", allEntries = true)
-    public ResponseEntity<?> postStockQuotes(Form form){
-        Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
-        if(optionalStock.isPresent()){
-            List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
-            quoteRepository.saveAll(quotes);
-            return new ResponseEntity<>(new StockDto(optionalStock.get()), HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("StockId Not Found", HttpStatus.NOT_FOUND);
-    }
-
-    public ResponseEntity<?> postStocks(Form form){
-        if(isAtStockManager(form.getStockId())){
-            StockAux stock = StockMapper.convertToEntity(form);
-            stockRepository.save(stock);
-            quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
-            return new ResponseEntity<>(new StockDto(stock), HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("StockId Must First Be In Stock Manager", HttpStatus.BAD_REQUEST);
-    }
-
-    public ResponseEntity<?> postStocksQuotes(Form form){
+    public ResponseEntity<?> postStockAndQuotes(Form form){
         StockAux stock = StockMapper.convertToEntity(form);
         if(isAtStockManager(form.getStockId())){
             Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
@@ -85,7 +64,7 @@ public class StockService {
             }
             return new ResponseEntity<>(new StockDto(stock), HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("StockId Must First Be In Stock Manager", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("StockId Not Found", HttpStatus.BAD_REQUEST);
     }
 
 

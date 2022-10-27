@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  * @since Oct. 2022
  */
 @RestController
-@RequestMapping("/stocks")
+@RequestMapping("/quote")
 public class StockController {
 
     @Autowired
@@ -32,16 +33,10 @@ public class StockController {
         return stockService.findStockByStockId(id);
     }
 
-    @PostMapping("/postQuotes")
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<?> postQuotes(@RequestBody Form form){
-        return stockService.postStockQuotes(form);
-    }
-
-    @PostMapping("/postStocks")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<?> postStocks(@RequestBody Form form){
-        return stockService.postStocks(form);
+    public ResponseEntity<?> postStocks(@RequestBody @Valid Form form){
+        return stockService.postStockAndQuotes(form);
     }
 
 }
