@@ -1,23 +1,23 @@
 package br.com.inatel.quotationManagement.controller;
 
-import br.com.inatel.quotationManagement.model.entity.Quote;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class StockControllerTest {
 
     @Autowired
