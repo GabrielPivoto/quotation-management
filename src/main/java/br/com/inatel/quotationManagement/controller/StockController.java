@@ -4,6 +4,7 @@ import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +29,14 @@ public class StockController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getStockByStockId(@PathVariable String id){
+    @ResponseStatus(HttpStatus.OK)
+    public StockDto getStockByStockId(@PathVariable String id){
         return stockService.findStockByStockId(id);
     }
 
     @PostMapping
-    public ResponseEntity<?> postStocks(@RequestBody @Valid Form form){
+    @ResponseStatus(HttpStatus.CREATED)
+    public StockDto postStocks(@RequestBody @Valid Form form){
         return stockService.postStockAndQuotes(form);
     }
 

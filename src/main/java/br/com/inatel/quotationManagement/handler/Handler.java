@@ -1,5 +1,7 @@
 package br.com.inatel.quotationManagement.handler;
 
+import br.com.inatel.quotationManagement.exception.StockNotFoundException;
+import br.com.inatel.quotationManagement.model.dto.ErrorDto;
 import br.com.inatel.quotationManagement.model.dto.StockDtoError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -31,6 +33,24 @@ public class Handler {
             errors.add(error);
         });
         return errors;
+    }
+
+    @ExceptionHandler(StockNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorDto generateException(StockNotFoundException e){
+        ErrorDto dto = new ErrorDto();
+        dto.setStatus(HttpStatus.NOT_FOUND);
+        dto.setErrorMessage(e.getMessage());
+        return dto;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorDto generateException(RuntimeException e){
+        ErrorDto dto = new ErrorDto();
+        dto.setStatus(HttpStatus.NOT_FOUND);
+        dto.setErrorMessage(e.getMessage());
+        return dto;
     }
 
 }
