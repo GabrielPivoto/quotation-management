@@ -1,5 +1,6 @@
 package br.com.inatel.quotationManagement.controller;
 
+import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import org.junit.jupiter.api.Order;
@@ -17,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public class StockControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test @Order(1)
-    public void givenStocksRequest_whenGetAllStocks_thenShouldReturnEmptyStocksListAnd200(){
+    public void givenStocksRequest_whenGetAllStocks_thenShouldReturn200Ok(){
         webTestClient.get()
                 .uri("/quote")
                 .exchange()
@@ -35,7 +36,7 @@ public class StockControllerTest {
     }
 
     @Test @Order(2)
-    public void givenNewStock_whenPostStock_thenShouldReturnStatusCreatedAndValidStock(){
+    public void givenValidStockId_whenPostStock_thenShouldReturnStatusCreatedAndValidStock(){
         Form form = new Form();
         form.setStockId("petr4");
         Map<LocalDate,Double> quotesMap = new HashMap<>();
@@ -52,10 +53,11 @@ public class StockControllerTest {
 
         assertNotNull(stock);
         assertNotNull(stock.getId());
+        assertEquals("petr4",stock.getStockId());
     }
 
     @Test @Order(3)
-    void givenValidStockId_whenGetStockByStockId_thenShouldReturnValidStockAnd200(){
+    void givenValidStockId_whenGetStockByStockId_thenShouldReturnValidStockAnd200Ok(){
         String stockId = "petr4";
 
         StockAux stock = webTestClient.get()
@@ -68,8 +70,42 @@ public class StockControllerTest {
 
         assertNotNull(stock);
         assertEquals(stock.getStockId(),stockId);
-
     }
 
+
+    @Test @Order(4)
+    public void givenInvalidStockId_whenPostStock_thenShouldReturnStatusNotFound(){
+        Form form = new Form();
+        form.setStockId("vale5");
+        Map<LocalDate,Double> quotesMap = new HashMap<>();
+        quotesMap.put(LocalDate.now(),30.0);
+        form.setQuotesMap(quotesMap);
+
+        String result = webTestClient.post()
+                .uri("/quote")
+                .bodyValue(form)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(StockAux.class)
+                .returnResult().toString();
+
+        assertTrue(result.contains("StockId Not Found"));
+    }
+
+
+    @Test @Order(5)
+    void givenInvalidStockId_whenGetStockByStockId_thenShouldReturnStatusNotFound(){
+        String stockId = "vale5";
+
+        String result = webTestClient.get()
+                .uri("/quote/" + stockId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(StockAux.class)
+                .returnResult()
+                .toString();
+
+        assertTrue(result.contains("StockId Not Found"));
+    }
 
 }
