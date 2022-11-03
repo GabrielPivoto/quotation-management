@@ -3,6 +3,7 @@ package br.com.inatel.quotationManagement.handler;
 import br.com.inatel.quotationManagement.exception.StockNotFoundException;
 import br.com.inatel.quotationManagement.model.dto.ErrorDto;
 import br.com.inatel.quotationManagement.model.dto.StockDtoError;
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +51,24 @@ public class Handler {
     public ErrorDto generateException(RuntimeException e){
         ErrorDto dto = new ErrorDto();
         dto.setStatus(HttpStatus.NOT_FOUND);
+        dto.setErrorMessage(e.getMessage());
+        return dto;
+    }
+
+    @ExceptionHandler(SQLException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorDto generateException(SQLException e){
+        ErrorDto dto = new ErrorDto();
+        dto.setStatus(HttpStatus.BAD_REQUEST);
+        dto.setErrorMessage(e.getMessage());
+        return dto;
+    }
+
+    @ExceptionHandler(JDBCConnectionException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorDto generateException(JDBCConnectionException e){
+        ErrorDto dto = new ErrorDto();
+        dto.setStatus(HttpStatus.BAD_REQUEST);
         dto.setErrorMessage(e.getMessage());
         return dto;
     }
