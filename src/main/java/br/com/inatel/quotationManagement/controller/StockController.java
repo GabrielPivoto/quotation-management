@@ -37,7 +37,7 @@ public class StockController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public StockDto postStocks(@RequestBody @Valid Form form){
-        return stockService.postStockAndQuotes(form);
+        return stockService.postStocks(form);
     }
 
     @DeleteMapping("/{id}")

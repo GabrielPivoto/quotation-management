@@ -11,6 +11,7 @@ import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
 import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,24 @@ public class StockService {
         return new StockDto(opStock.get());
     }
 
+    @CacheEvict(value = "stockList", allEntries = true)
+    public StockDto postStocks(Form form){
+        StockAux stock;
+        Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
+        if(optionalStock.isPresent()){
+            stock = optionalStock.get();
+            List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
+            quoteRepository.saveAll(quotes);
+            return new StockDto(stock);
+        }else if(isAtStockManager(form.getStockId())){
+            stock = StockMapper.convertToEntity(form);
+            stockRepository.save(stock);
+            quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
+            return new StockDto(stock);
+        }
+        throw new StockNotFoundException("StockId Not Found");
+    }
+
     public StockDto postStockAndQuotes(Form form){
         StockAux stock;
         if(isAtStockManager(form.getStockId())){
@@ -71,6 +90,7 @@ public class StockService {
         throw new StockNotFoundException("StockId Not Found");
     }
 
+    @CacheEvict(value = "stockList", allEntries = true)
     public ResponseEntity<?> deleteStock(String stockId){
         Optional<StockAux> opStock = stockRepository.findByStockId(stockId);
         if(opStock.isPresent()){
@@ -87,7 +107,7 @@ public class StockService {
         return webClientGetStocks.listAllStocks();
     }
 
-    private boolean isAtStockManager(String stockId){
+    public boolean isAtStockManager(String stockId){
         List<StockAux> stocks = listStocksFromDocker();
         return stocks.stream().anyMatch(s -> s.getId().equals(stockId));
     }
