@@ -4,6 +4,7 @@ import br.com.inatel.quotationManagement.exception.StockNotFoundException;
 import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.entity.Quote;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
+import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
 import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
@@ -12,18 +13,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +40,10 @@ public class StockServiceTest {
 
     private String validStockId;
     private String inValidStockId;
-    private StockAux stock;
+    private StockAux stock1;
+    private StockAux stock2;
+    private Form form;
+    private Map<LocalDate,Double> quotesMap;
 
     @InjectMocks
     private StockService stockService = new StockService();
@@ -54,16 +56,20 @@ public class StockServiceTest {
         quotes.add(new Quote(35.0, LocalDate.now()));
         quotes.add(new Quote(12.0, LocalDate.now().plusDays(1)));
         quotes.add(new Quote(3.5, LocalDate.now().plusDays(3)));
-        stock = new StockAux(validStockId, quotes);
+        stock1 = new StockAux(validStockId, quotes);
+        stock2 = new StockAux(validStockId, quotes);
+        quotesMap = new HashMap<>();
+        quotesMap.put(LocalDate.now(),12.5);
+        form = new Form("petr4",quotesMap);
     }
 
     @Test
     public void givenFindAllStocks_shouldReturnStockList(){
-        when(stockRepository.findAll()).thenReturn(List.of());
+        when(stockRepository.findAll()).thenReturn(List.of(stock1,stock2));
 
         List<StockDto> stocks = stockService.findAll();
 
-        assertEquals(0,stocks.size());
+        assertEquals(2,stocks.size());
     }
 
     @Test
@@ -76,19 +82,19 @@ public class StockServiceTest {
     }
 
 
-
     @Test
     public void givenValidStockId_WhenGetStockByStockId_thenShouldReturnStockDto(){
-        when(stockRepository.findByStockId(validStockId)).thenReturn(Optional.of(stock));
+        when(stockRepository.findByStockId(validStockId)).thenReturn(Optional.of(stock1));
 
         StockDto stockDto = stockService.findStockByStockId(validStockId);
 
         assertEquals("petr4",stockDto.getStockId());
-        assertEquals(stock.getQuotes().get(0).getCost(),stockDto.getQuotesMap().get(LocalDate.now()));
+        assertEquals(stock1.getQuotes().get(0).getCost(),stockDto.getQuotesMap().get(LocalDate.now()));
     }
+
     @Test
-    public void givenInvalidStockId_WhenGetStockByStockId_thenShouldThorwStockNotFoundException(){
-        when(stockRepository.findByStockId(validStockId)).thenThrow(StockNotFoundException.class);
+    public void givenInvalidStockId_WhenGetStockByStockId_thenShouldThrowStockNotFoundException(){
+        when(stockRepository.findByStockId(inValidStockId)).thenReturn(Optional.empty());
 
         String errorMessage = null;
         HttpStatus status;
@@ -99,6 +105,30 @@ public class StockServiceTest {
             errorMessage = ignored.getMessage();
         }
         assertEquals("StockId Not Found",errorMessage);
+    }
+
+    @Test
+    public void givenValidStock_WhenPostStock_thenShouldReturnStockDto(){
+        when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.of(stock1));
+
+        StockDto dto = stockService.postStocks(form);
+
+        assertEquals(validStockId,dto.getStockId());
+    }
+
+    @Test
+    public void givenAStockThatIsNotAtStockManager_whenPostStock_thenShouldThrowStockNotFoundException(){
+        when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.empty());
+
+        String result = null;
+
+        try {
+            StockDto dto = stockService.postStocks(form);
+        }catch (Exception e){
+            result = e.getMessage();
+        }
+
+        assertEquals("StockId Not Found", result);
     }
 
 }
