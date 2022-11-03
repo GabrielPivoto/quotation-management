@@ -22,8 +22,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -58,6 +56,8 @@ public class StockServiceTest {
         quotes.add(new Quote(3.5, LocalDate.now().plusDays(3)));
         stock1 = new StockAux(validStockId, quotes);
         stock2 = new StockAux(validStockId, quotes);
+        stock1.setId("petr4");
+        stock2.setId("val5");
         quotesMap = new HashMap<>();
         quotesMap.put(LocalDate.now(),12.5);
         form = new Form("petr4",quotesMap);
@@ -119,6 +119,7 @@ public class StockServiceTest {
     @Test
     public void givenAStockThatIsNotAtStockManager_whenPostStock_thenShouldThrowStockNotFoundException(){
         when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.empty());
+        when(webClientGetStocks.listAllStocks()).thenReturn(List.of());
 
         String result = null;
 
@@ -129,6 +130,16 @@ public class StockServiceTest {
         }
 
         assertEquals("StockId Not Found", result);
+    }
+
+    @Test
+    public void givenAStockThatIsAtStockManager_whenPostStock_thenShouldReturnStockDto(){
+        when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.empty());
+        when(webClientGetStocks.listAllStocks()).thenReturn(List.of(stock1,stock2));
+
+        StockDto dto = stockService.postStocks(form);
+
+        assertEquals("petr4", dto.getStockId());
     }
 
 }
