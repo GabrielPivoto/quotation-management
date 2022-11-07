@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+      - 33060:33060
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bootdb
+    networks:
+      - inatel
+
+  stockmanager:
+    image: adautomendes/stock-manager
+    container_name: stockmanager
+    ports:
+      - 8080:8080
+    networks:
+      - inatel
+
+  quotationmanagement:
+    image: quotation-management
+    container_name: quotation-management
+    ports:
+      - 8081:8081
+    environment:
+      - MYSQL_CONTAINER=mysql
+      - STOCK_MANAGER_CONTAINER=stockmanager
+      - QUOTATION_MANAGER_CONTAINER=quotation-management
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - inatel
+    depends_on:
+      - stockmanager
+      - mysql
+
+networks:
+  inatel:
+    driver: bridge
