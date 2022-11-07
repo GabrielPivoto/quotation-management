@@ -97,7 +97,7 @@ public class StockService {
             List<Quote> quotes = opStock.get().getQuotes();
             stockRepository.delete(opStock.get());
             quoteRepository.deleteAll(quotes);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("Deleted",HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>("StockId Not Found",HttpStatus.NOT_FOUND);
     }
