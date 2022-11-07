@@ -24,6 +24,7 @@ public class StockController {
     private StockService stockService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<StockDto> listAllStocks(){
         return stockService.findAll();
     }
