@@ -4,21 +4,22 @@
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 
-#### If you want, you can download the presentation:
-
-[![Dowload](https://custom-icon-badges.demolab.com/badge/-Presentation-F25237?style=for-the-badge&logo=download&logoColor=white)](https://github.com/GabrielPivoto/quotation-management/raw/master/presentation/ApresentacaoProjeto1.pdf)
 
 ### First IDP project
 
 REST application whose purpose is to store quotes from stock market.
 
-<h4 align="center"> 
+<h4 align="left"> 
 	Author :pencil2:
 </h4>
 
-<p align="center">
+<p align="left">
  <a href="https://github.com/GabrielPivoto">Gabriel Pivoto</a> 
 </p>
+
+#### If you want, you can download the presentation:
+
+[![Dowload](https://custom-icon-badges.demolab.com/badge/-Presentation-F25237?style=for-the-badge&logo=download&logoColor=white)](https://github.com/GabrielPivoto/quotation-management/raw/master/presentation/ApresentacaoProjeto1.pdf)
 
 ### What is needed 🧾
 - [x] [JDK](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html)
