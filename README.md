@@ -4,6 +4,10 @@
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 
+#### If you want, you can download the presentation:
+
+[![Dowload](https://custom-icon-badges.demolab.com/badge/-Presentation-F25237?style=for-the-badge&logo=download&logoColor=white)](https://github.com/GabrielPivoto/quotation-management/raw/master/presentation/ApresentacaoProjeto1.pdf)
+
 ### First IDP project
 
 REST application whose purpose is to store quotes from stock market.
