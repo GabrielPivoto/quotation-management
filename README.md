@@ -4,18 +4,15 @@
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 
+---
 
 ### First IDP project
 
 REST application whose purpose is to store quotes from stock market.
 
 <h4 align="left"> 
-	Author :pencil2:
+	Author ✏️: <a href="https://github.com/GabrielPivoto">Gabriel Pivoto</a>
 </h4>
-
-<p align="left">
- <a href="https://github.com/GabrielPivoto">Gabriel Pivoto</a> 
-</p>
 
 #### If you want, you can download the presentation:
 
@@ -26,6 +23,8 @@ REST application whose purpose is to store quotes from stock market.
 - [x] [Maven](https://maven.apache.org/download.cgi)
 - [x] [Docker](https://www.docker.com/)
 - [x] [Postman](https://www.postman.com/)
+
+---
 
 ### Starting ▶️
 
@@ -55,6 +54,8 @@ MYSQL_DATABASE=bootdb -p 3306:3306 -p 33060:33060 -d mysql
 ```
 docker container run –-name stockmanager --network=inatel -p 8080:8080 -d adautomendes/stock-manager
 ```
+
+---
 
 ### How to use ⚙️
 
@@ -99,3 +100,28 @@ To read a stock by stockId from Quotation Management:
 To deleye a stock by stockId from Quotation Management:
 
 - DELETE ``` http://localhost:8081/stock/stockId```
+
+---
+
+### Docker-Compose 🐋
+
+First of all, it is necessary to create a Quotation Management container.
+Before building the image, run the following command in the root directory 
+of the project:
+
+```
+mvn clean install -DskipTests
+```
+
+Also in the root directory, run the following command to
+build the image:
+
+```
+docker build -t quotation-management .
+```
+
+Finally:
+
+```
+docker compose up
+```
