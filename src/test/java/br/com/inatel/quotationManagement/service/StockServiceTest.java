@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -110,6 +111,7 @@ public class StockServiceTest {
     @Test
     public void givenValidStock_WhenPostStock_thenShouldReturnStockDto(){
         when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.of(stock1));
+        when(webClientGetStocks.listAllStocks()).thenReturn(List.of(stock1,stock2));
 
         StockDto dto = stockService.postStocks(form);
 
@@ -118,7 +120,6 @@ public class StockServiceTest {
 
     @Test
     public void givenAStockThatIsNotAtStockManager_whenPostStock_thenShouldThrowStockNotFoundException(){
-        when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.empty());
         when(webClientGetStocks.listAllStocks()).thenReturn(List.of());
 
         String result = null;
@@ -140,6 +141,41 @@ public class StockServiceTest {
         StockDto dto = stockService.postStocks(form);
 
         assertEquals("petr4", dto.getStockId());
+    }
+
+    @Test
+    public void test(){
+        when(stockRepository.findByStockId(form.getStockId())).thenThrow(IllegalStateException.class);
+
+        try{
+            StockDto stockDto = stockService.findStockByStockId(form.getStockId());
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+    }
+
+    @Test
+    public void givenValidStockId_whenDeleteStockByStockId_thenShouldReturnDeleteMessage(){
+        when(stockRepository.findByStockId(form.getStockId())).thenReturn(Optional.of(stock1));
+
+        String deleted = String.valueOf(stockService.deleteStock(form.getStockId()));
+
+        assertTrue(deleted.contains("Stock deleted"));
+    }
+
+    @Test
+    public void givenInvalidStockId_whenDeleteStockByStockId_thenShouldThrowStockNotFoundException(){
+
+        String result = null;
+
+        try {
+            stockService.deleteStock(form.getStockId());
+        }catch (Exception e){
+            result = e.getMessage();
+        }
+
+        assertEquals("StockId Not Found", result);
     }
 
 }
