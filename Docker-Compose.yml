@@ -20,6 +20,8 @@ services:
       - 8080:8080
     networks:
       - inatel
+    depends_on:
+      - mysql
 
   quotationmanagement:
     image: quotation-management
