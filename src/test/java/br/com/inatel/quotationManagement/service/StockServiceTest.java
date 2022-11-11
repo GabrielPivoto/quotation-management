@@ -7,7 +7,7 @@ import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
-import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
+import br.com.inatel.quotationManagement.webclient.WebClientUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,7 @@ public class StockServiceTest {
     @Mock
     private QuoteRepository quoteRepository;
     @Mock
-    private WebClientGetStocks webClientGetStocks;
+    private WebClientUtil webClientGetStocks;
 
     private String validStockId;
     private String inValidStockId;
