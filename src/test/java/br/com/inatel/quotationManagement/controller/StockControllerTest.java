@@ -1,13 +1,11 @@
 package br.com.inatel.quotationManagement.controller;
 
-import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.LocalDate;
@@ -27,7 +25,7 @@ public class StockControllerTest {
     @Test @Order(1)
     public void givenStocksRequest_whenGetAllStocks_thenShouldReturn200Ok(){
         webTestClient.get()
-                .uri("/quote")
+                .uri("/stock")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -44,7 +42,7 @@ public class StockControllerTest {
         form.setQuotesMap(quotesMap);
 
         StockAux stock = webTestClient.post()
-                .uri("/quote")
+                .uri("/stock")
                 .bodyValue(form)
                 .exchange()
                 .expectStatus().isCreated()
@@ -61,7 +59,7 @@ public class StockControllerTest {
         String stockId = "petr4";
 
         StockAux stock = webTestClient.get()
-                .uri("/quote/" + stockId)
+                .uri("/stock/" + stockId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(StockAux.class)
@@ -81,15 +79,14 @@ public class StockControllerTest {
         quotesMap.put(LocalDate.now(),30.0);
         form.setQuotesMap(quotesMap);
 
-        String result = webTestClient.post()
-                .uri("/quote")
+        webTestClient.post()
+                .uri("/stock")
                 .bodyValue(form)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(StockAux.class)
-                .returnResult().toString();
+                .returnResult();
 
-        assertTrue(result.contains("StockId Not Found"));
     }
 
 
@@ -98,7 +95,7 @@ public class StockControllerTest {
         String stockId = "vale5";
 
         String result = webTestClient.get()
-                .uri("/quote/" + stockId)
+                .uri("/stock/" + stockId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(StockAux.class)
@@ -106,6 +103,28 @@ public class StockControllerTest {
                 .toString();
 
         assertTrue(result.contains("StockId Not Found"));
+    }
+
+    @Test @Order(6)
+    void givenValidStockId_whenDeleteStockByStockId_thenShouldReturnNoContent(){
+        String stockId = "petr4";
+
+        String result = webTestClient.delete()
+                .uri("/stock/" + stockId)
+                .exchange()
+                .expectStatus().isNoContent().toString();
+
+        System.out.println(result);
+    }
+
+    @Test @Order(7)
+    void givenInvalidStockId_whenDeleteStockByStockId_thenShouldReturnStatusNotFound(){
+        String stockId = "petr7";
+
+        webTestClient.delete()
+                .uri("/stock/" + stockId)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
 }
