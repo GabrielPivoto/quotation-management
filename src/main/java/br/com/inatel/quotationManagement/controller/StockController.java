@@ -17,33 +17,37 @@ import java.util.List;
  * @since Oct. 2022
  */
 @RestController
-@RequestMapping("/quote")
 public class StockController {
 
     @Autowired
     private StockService stockService;
 
-    @GetMapping
+    @GetMapping("/stock")
     @ResponseStatus(HttpStatus.OK)
     public List<StockDto> listAllStocks(){
         return stockService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/stock/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StockDto getStockByStockId(@PathVariable String id){
         return stockService.findStockByStockId(id);
     }
 
-    @PostMapping
+    @PostMapping("/stock")
     @ResponseStatus(HttpStatus.CREATED)
     public StockDto postStocks(@RequestBody @Valid Form form){
         return stockService.postStocks(form);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/stock/{id}")
     public ResponseEntity<?> deleteStocks(@PathVariable String id){
         return stockService.deleteStock(id);
+    }
+
+    @DeleteMapping("/stockcache")
+    public void deleteCache(){
+        System.out.println("Cache cleaned");
     }
 
 }

@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,23 +56,6 @@ public class StockService {
     @CacheEvict(value = "stockList", allEntries = true)
     public StockDto postStocks(Form form){
         StockAux stock;
-        Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
-        if(optionalStock.isPresent()){
-            stock = optionalStock.get();
-            List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
-            quoteRepository.saveAll(quotes);
-            return new StockDto(stock);
-        }else if(isAtStockManager(form.getStockId())){
-            stock = StockMapper.convertToEntity(form);
-            stockRepository.save(stock);
-            quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
-            return new StockDto(stock);
-        }
-        throw new StockNotFoundException("StockId Not Found");
-    }
-
-    public StockDto postStockAndQuotes(Form form){
-        StockAux stock;
         if(isAtStockManager(form.getStockId())){
             Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
             if(optionalStock.isPresent()){
@@ -97,9 +79,9 @@ public class StockService {
             List<Quote> quotes = opStock.get().getQuotes();
             stockRepository.delete(opStock.get());
             quoteRepository.deleteAll(quotes);
-            return new ResponseEntity<>("Deleted",HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Stock deleted",HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>("StockId Not Found",HttpStatus.NOT_FOUND);
+        throw new StockNotFoundException("StockId Not Found");
     }
 
 

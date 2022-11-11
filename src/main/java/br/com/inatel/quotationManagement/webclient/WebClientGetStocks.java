@@ -2,6 +2,7 @@ package br.com.inatel.quotationManagement.webclient;
 
 import br.com.inatel.quotationManagement.model.entity.StockAux;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -17,9 +18,10 @@ import java.util.List;
 @Service
 public class WebClientGetStocks {
 
-    @Value("${URL_MANAGER}")
+    @Value("${url.manager}")
     private String URL_MANAGER;
 
+    @Cacheable(value = "stockList")
     public List<StockAux> listAllStocks(){
         List<StockAux> stocks = new ArrayList<>();
 
