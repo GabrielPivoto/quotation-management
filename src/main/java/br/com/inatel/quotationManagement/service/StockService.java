@@ -9,7 +9,7 @@ import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
 import br.com.inatel.quotationManagement.repository.StockRepository;
-import br.com.inatel.quotationManagement.webclient.WebClientGetStocks;
+import br.com.inatel.quotationManagement.webclient.WebClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,7 +37,7 @@ public class StockService {
     private QuoteRepository quoteRepository;
 
     @Autowired
-    private WebClientGetStocks webClientGetStocks;
+    private WebClientUtil webClientGetStocks;
 
     @Cacheable(value = "stockList")
     public List<StockDto> findAll(){
