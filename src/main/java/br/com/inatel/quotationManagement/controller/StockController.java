@@ -22,25 +22,25 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
-    @GetMapping("/stock")
+    @GetMapping("/quote")
     @ResponseStatus(HttpStatus.OK)
     public List<StockDto> listAllStocks(){
         return stockService.findAll();
     }
 
-    @GetMapping("/stock/{id}")
+    @GetMapping("/quote/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StockDto getStockByStockId(@PathVariable String id){
         return stockService.findStockByStockId(id);
     }
 
-    @PostMapping("/stock")
+    @PostMapping("/quote")
     @ResponseStatus(HttpStatus.CREATED)
     public StockDto postStocks(@RequestBody @Valid Form form){
         return stockService.postStocks(form);
     }
 
-    @DeleteMapping("/stock/{id}")
+    @DeleteMapping("/quote/{id}")
     public ResponseEntity<?> deleteStocks(@PathVariable String id){
         return stockService.deleteStock(id);
     }
