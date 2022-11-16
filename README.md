@@ -55,6 +55,18 @@ MYSQL_DATABASE=bootdb -p 3306:3306 -p 33060:33060 -d mysql
 docker container run –-name stockmanager --network=inatel -p 8080:8080 -d adautomendes/stock-manager
 ```
 
+- Build the Quotation Management image:
+
+```
+docker build -t quotation management .
+```
+
+- Start the Quotation management application:
+
+```
+docker container run --name quotation-management --network=inatel -p 8081:8081 --env SPRING_PROFILES_ACTIVE=prod --env MYSQL_CONTAINER=mysql --env STOCK_MANAGER_CONTAINER=stockmanager --env QUOTATION_MANAGER_CONTAINER=quotation-management quotation-management
+```
+
 ---
 
 ### How to use ⚙️
