@@ -91,7 +91,7 @@ To read all stocks from Stock Manager:
 
 To register a new stock in Quotation Management:
 
-- POST ``` http://localhost:8081/stock```
+- POST ``` http://localhost:8081/quote```
 
 ```
 {
@@ -103,15 +103,15 @@ To register a new stock in Quotation Management:
 ```
 To read all stocks from Quotation Management:
 
-- GET ``` http://localhost:8081/stock```
+- GET ``` http://localhost:8081/quote```
 
 To read a stock by stockId from Quotation Management:
 
-- GET ``` http://localhost:8081/stock/stockId```
+- GET ``` http://localhost:8081/quote/stockId```
 
 To deleye a stock by stockId from Quotation Management:
 
-- DELETE ``` http://localhost:8081/stock/stockId```
+- DELETE ``` http://localhost:8081/quote/stockId```
 
 ---
 
