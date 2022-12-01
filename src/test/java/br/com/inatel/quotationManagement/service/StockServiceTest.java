@@ -6,7 +6,7 @@ import br.com.inatel.quotationManagement.model.entity.Quote;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
-import br.com.inatel.quotationManagement.repository.StockRepository;
+import br.com.inatel.quotationManagement.repository.StockQuoteRepository;
 import br.com.inatel.quotationManagement.webclient.WebClientUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 public class StockServiceTest {
 
     @Mock
-    private StockRepository stockRepository;
+    private StockQuoteRepository stockRepository;
     @Mock
     private QuoteRepository quoteRepository;
     @Mock

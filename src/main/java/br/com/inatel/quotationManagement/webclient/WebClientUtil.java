@@ -1,7 +1,9 @@
 package br.com.inatel.quotationManagement.webclient;
 
+import br.com.inatel.quotationManagement.exception.StockManagerNotAvailableException;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
-import br.com.inatel.quotationManagement.notification.Notification;
+import br.com.inatel.quotationManagement.model.notification.Notification;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +21,7 @@ import java.util.List;
  * @since Oct. 2022
  */
 @Service
+@Slf4j
 public class WebClientUtil implements ApplicationListener<ApplicationReadyEvent> {
 
     @Value("${url.manager}")
@@ -42,7 +45,7 @@ public class WebClientUtil implements ApplicationListener<ApplicationReadyEvent>
                     .block();
 
         } catch (Exception e) {
-            e.printStackTrace();
+           throw new StockManagerNotAvailableException();
         }
     }
 
@@ -54,7 +57,7 @@ public class WebClientUtil implements ApplicationListener<ApplicationReadyEvent>
     @Cacheable(value = "stockList")
     public List<StockAux> listAllStocks(){
         List<StockAux> stocks = new ArrayList<>();
-
+        log.info("Log");
         Flux<StockAux> fluxStock = WebClient.builder().baseUrl("http://"+URL_MANAGER).build()
                 .get()
                 .uri("/stock")

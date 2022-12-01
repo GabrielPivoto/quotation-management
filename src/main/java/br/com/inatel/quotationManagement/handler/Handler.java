@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,29 +46,20 @@ public class Handler {
         return dto;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorDto generateException(RuntimeException e){
-        ErrorDto dto = new ErrorDto();
-        dto.setStatus(HttpStatus.NOT_FOUND);
-        dto.setErrorMessage(e.getMessage());
-        return dto;
-    }
-
-    @ExceptionHandler(SQLException.class)
+    @ExceptionHandler(DateTimeParseException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorDto generateException(SQLException e){
+    public ErrorDto generateException(DateTimeParseException e){
         ErrorDto dto = new ErrorDto();
         dto.setStatus(HttpStatus.BAD_REQUEST);
-        dto.setErrorMessage(e.getMessage());
+        dto.setErrorMessage("Date doesn't exist or is in invalid format");
         return dto;
     }
 
     @ExceptionHandler(JDBCConnectionException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
     public ErrorDto generateException(JDBCConnectionException e){
         ErrorDto dto = new ErrorDto();
-        dto.setStatus(HttpStatus.BAD_REQUEST);
+        dto.setStatus(HttpStatus.SERVICE_UNAVAILABLE);
         dto.setErrorMessage(e.getMessage());
         return dto;
     }

@@ -11,7 +11,7 @@ import java.util.Optional;
  * @since Oct. 2022
  */
 @Repository
-public interface StockRepository extends JpaRepository<StockAux,String> {
+public interface StockQuoteRepository extends JpaRepository<StockAux,String> {
 
     /**
      * Method responsible for finding a Stock by stockId

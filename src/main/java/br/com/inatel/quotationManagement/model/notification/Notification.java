@@ -1,4 +1,4 @@
-package br.com.inatel.quotationManagement.notification;
+package br.com.inatel.quotationManagement.model.notification;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

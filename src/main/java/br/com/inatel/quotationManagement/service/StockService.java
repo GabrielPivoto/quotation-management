@@ -1,18 +1,15 @@
 package br.com.inatel.quotationManagement.service;
 
 import br.com.inatel.quotationManagement.exception.StockNotFoundException;
-import br.com.inatel.quotationManagement.mapper.QuoteMapper;
-import br.com.inatel.quotationManagement.mapper.StockMapper;
+import br.com.inatel.quotationManagement.mapper.Mapper;
 import br.com.inatel.quotationManagement.model.dto.StockDto;
 import br.com.inatel.quotationManagement.model.entity.Quote;
 import br.com.inatel.quotationManagement.model.entity.StockAux;
 import br.com.inatel.quotationManagement.model.form.Form;
 import br.com.inatel.quotationManagement.repository.QuoteRepository;
-import br.com.inatel.quotationManagement.repository.StockRepository;
+import br.com.inatel.quotationManagement.repository.StockQuoteRepository;
 import br.com.inatel.quotationManagement.webclient.WebClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,7 +28,7 @@ import java.util.Optional;
 public class StockService {
 
     @Autowired
-    private StockRepository stockRepository;
+    private StockQuoteRepository stockQuoteRepository;
 
     @Autowired
     private QuoteRepository quoteRepository;
@@ -39,45 +36,44 @@ public class StockService {
     @Autowired
     private WebClientUtil webClientGetStocks;
 
-    @Cacheable(value = "stockList")
     public List<StockDto> findAll(){
-        List<StockAux> stocks = stockRepository.findAll();
+        List<StockAux> stocks = stockQuoteRepository.findAll();
         stocks.forEach(s -> s.getQuotes().size());
-        return StockMapper.convertToDto(stocks);
+        return Mapper.convertToDto(stocks);
     }
 
     public StockDto findStockByStockId(String id){
-        Optional<StockAux> opStock = stockRepository.findByStockId(id);
+        Optional<StockAux> opStock = stockQuoteRepository.findByStockId(id);
         if(opStock.isEmpty())
             throw new StockNotFoundException("StockId Not Found");
         return new StockDto(opStock.get());
     }
 
-    @CacheEvict(value = "stockList", allEntries = true)
+
     public StockDto postStocks(Form form){
         StockAux stock;
         if(isAtStockManager(form.getStockId())){
-            Optional<StockAux> optionalStock = stockRepository.findByStockId(form.getStockId());
+            Optional<StockAux> optionalStock = stockQuoteRepository.findByStockId(form.getStockId());
             if(optionalStock.isPresent()){
                 stock = optionalStock.get();
-                List<Quote> quotes = QuoteMapper.convertMapToList(form, optionalStock.get());
+                List<Quote> quotes = Mapper.convertMapToList(form, optionalStock.get());
                 quoteRepository.saveAll(quotes);
             }else{
-                stock = StockMapper.convertToEntity(form);
-                stockRepository.save(stock);
-                quoteRepository.saveAll(QuoteMapper.convertMapToList(form,stock));
+                stock = Mapper.convertToEntity(form);
+                stockQuoteRepository.save(stock);
+                quoteRepository.saveAll(Mapper.convertMapToList(form,stock));
             }
             return new StockDto(stock);
         }
         throw new StockNotFoundException("StockId Not Found");
     }
 
-    @CacheEvict(value = "stockList", allEntries = true)
+
     public ResponseEntity<?> deleteStock(String stockId){
-        Optional<StockAux> opStock = stockRepository.findByStockId(stockId);
+        Optional<StockAux> opStock = stockQuoteRepository.findByStockId(stockId);
         if(opStock.isPresent()){
             List<Quote> quotes = opStock.get().getQuotes();
-            stockRepository.delete(opStock.get());
+            stockQuoteRepository.delete(opStock.get());
             quoteRepository.deleteAll(quotes);
             return new ResponseEntity<>("Stock deleted",HttpStatus.NO_CONTENT);
         }
